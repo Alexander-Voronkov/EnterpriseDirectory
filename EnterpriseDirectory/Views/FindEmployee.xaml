@@ -1,0 +1,51 @@
+﻿<Window x:Class="EnterpriseDirectory.Views.FindEmployee"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EnterpriseDirectory.Views"
+        mc:Ignorable="d"
+        Title="Знайти співробітника" MinHeight="450" MinWidth="800" 
+        WindowStartupLocation="CenterOwner"
+        xmlns:spinner="clr-namespace:LoadingSpinnerControl;assembly=LoadingSpinnerControl"
+        xmlns:converters="clr-namespace:EnterpriseDirectory.Converters"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors">
+    
+    <Window.Resources>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding InitCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label Content="Оберіть критерій пошуку:"></Label>
+        
+        <ComboBox Grid.Row="1" ItemsSource="{Binding PropertiesCriterias}" SelectedItem="{Binding SelectedProperty}">
+        </ComboBox>
+
+        <DatePicker SelectedDate="{Binding StartDate}" Text="Початкова дата"/>
+        <DatePicker SelectedDate="{Binding EndDate}" Text="Кінцева дата"/>
+        <TextBox Text="{Binding MinValue}"/>
+        <TextBox Text="{Binding MaxValue}"/>
+        <TextBox Text="{Binding SearchText}"/>
+
+        <DataGrid ItemsSource="{Binding FoundValues}"/>
+
+        <Button Command="{Binding FindEmployeesCommand}" Content="Знайти"></Button>
+    </Grid>
+</Window>

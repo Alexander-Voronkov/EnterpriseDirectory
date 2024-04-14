@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <ItemGroup>
+    <None Remove="bin\**" />
+    <None Remove="obj\**" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <DomainPath>$(MSBuildThisFileDirectory)\Domain\*.csproj</DomainPath>
+    <InfrastructurePath>$(MSBuildThisFileDirectory)\Infrastructure\*.csproj</InfrastructurePath>
+  </PropertyGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.Equals('EnterpriseDirectory'))">
+    <ProjectReference Include="$(InfrastructurePath)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$(MSBuildProjectName.Equals('Infrastructure'))">
+    <ProjectReference Include="$(DomainPath)" />
+  </ItemGroup>	
+  
+</Project>
