@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Domain;
+using EnterpriseDirectory.Messages;
 using EnterpriseDirectory.Models;
 using EnterpriseDirectory.Services;
 using EnterpriseDirectory.Views;
@@ -11,9 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
 
 namespace EnterpriseDirectory.ViewModels.ShowEmployees;
 
@@ -302,21 +302,29 @@ public partial class ShowEmployeesViewModel : ObservableObject
         await RefreshEmployees();
     }
 
-    private async Task Find()
+    private Task Find()
     {
         _findEmployeeView.ShowDialog();
+
+        return Task.CompletedTask;
     }
 
     private async Task Modify()
     {
         _logger.LogInformation("Opening modify employee window...");
+        WeakReferenceMessenger.Default.Send(new ModifyEmployeeMessage(SelectedItem));
+
         _modifyEmployeeView.ShowDialog();
+
+        await RefreshEmployees();
     }
 
     private async Task AddNew()
     {
         _logger.LogInformation("Opening add new employee window...");
         _addNewEmployeeView.ShowDialog();
+
+        await RefreshEmployees();
     }
     #endregion
 

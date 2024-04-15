@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EnterpriseDirectory.ViewModels.ModifyEmployees;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,9 +22,13 @@ namespace EnterpriseDirectory.Views;
 /// </summary>
 public partial class ModifyEmployee : Window
 {
-    public ModifyEmployee()
+    public ModifyEmployee(
+        ILogger<ModifyEmployee> logger,
+        ModifyEmployeeViewModel viewModel)
     {
+        logger.LogInformation("Initializing the modify window");
         InitializeComponent();
+        DataContext = viewModel;
     }
 
     protected override void OnClosing(CancelEventArgs e)

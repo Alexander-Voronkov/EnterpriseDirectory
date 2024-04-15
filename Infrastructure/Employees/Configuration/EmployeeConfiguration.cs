@@ -69,17 +69,16 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
         var faker = new Faker<Employee>("uk")
             .RuleFor(x => x.Id, x => index++)
             .RuleFor(x => x.Address, x => x.Address.FullAddress())
-            .RuleFor(x => x.BirthDate, x => x.Date.Past(80))
+            .RuleFor(x => x.BirthDate, x => x.Date.Past(80, DateTime.UtcNow.AddYears(-18)))
             .RuleFor(x => x.AcceptedOn, x => x.Date.Past(5))
             .RuleFor(x => x.Email, x => x.Internet.Email())
             .RuleFor(x => x.FiredOn, x => x.Date.Past(5).OrNull(x))
             .RuleFor(x=>x.FirstName, x => x.Name.FirstName())
             .RuleFor(x=>x.LastName, x => x.Name.LastName())
             .RuleFor(x=>x.Patronymic, x => x.Name.Suffix())
-            .RuleFor(x=>x.PhoneNumber, x => x.Phone.PhoneNumber())
+            .RuleFor(x=>x.PhoneNumber, x => x.Phone.PhoneNumber("##########"))
             .RuleFor(x=>x.Position, x => x.PickRandom(new string[] {"Директор", "Секретар", "Програміст", "Прибиральник", "Бухгалтер"}))
             .RuleFor(x=>x.Salary, x => x.Finance.Amount(1000, 20000))
-            .RuleFor(x=>x.Currency, x => x.Finance.Currency().Code)
             .RuleFor(x=>x.Status, x => x.Random.Word());
 
         var employees = faker.Generate(500);        

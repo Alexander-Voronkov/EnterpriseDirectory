@@ -6,36 +6,41 @@ using EnterpriseDirectory.Attributes;
 using EnterpriseDirectory.Models;
 using FluentValidation;
 using Infrastructure;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Windows.Media.Animation;
-using System.Xml;
-using static Dapper.SqlMapper;
-using static MaterialDesignThemes.Wpf.Theme.ToolBar;
 
 namespace EnterpriseDirectory.ViewModels.FindEmployees;
 
-public partial class FindEmployeesViewModel : ObservableObject
+public partial class FindEmployeesViewModel : ObservableObject, INotifyDataErrorInfo
 {
     private readonly ILogger _logger;
     private readonly IMapper _mapper;
+    private readonly IValidator _validator;
     private readonly ApplicationDbContext _context;
+    private readonly Dictionary<string, List<string>> _errors;
+    private int totalErrors = 1;
+
+    public bool HasErrors => this.totalErrors > 0;
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
     public FindEmployeesViewModel(
         ILogger<FindEmployeesViewModel> logger,
+        IValidator<FindEmployeesViewModel> validator,
         IMapper mapper,
         ApplicationDbContext context)
     {
         _logger = logger;
         _mapper = mapper;
+        _validator = validator;
         _context = context;
         PropertiesCriterias = new();
         FoundValues = new();
+        _errors = new();
         FindEmployeeCommand = new AsyncRelayCommand(FindEmployee, CanFind);
         InitCommand = new AsyncRelayCommand(Initialize);
     }
@@ -243,35 +248,115 @@ public partial class FindEmployeesViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty]
-    public bool isDateSelected;
+    private bool isDateSelected;
+    public bool IsDateSelected
+    {
+        get => isDateSelected;
+        set
+        {
+            SetProperty(ref isDateSelected, value, nameof(IsDateSelected));
+            Validate(nameof(IsDateSelected));
+        }
+    }
 
-    [ObservableProperty]
-    public bool isTextSelected;
+    private bool isTextSelected;
+    public bool IsTextSelected
+    {
+        get => isTextSelected;
+        set
+        {
+            SetProperty(ref isTextSelected, value, nameof(IsTextSelected));
+            Validate(nameof(IsTextSelected));
+        }
+    }
 
-    [ObservableProperty]
-    public bool isNumberSelected;
+    private bool isNumberSelected;
+    public bool IsNumberSelected
+    {
+        get => isNumberSelected;
+        set
+        {
+            SetProperty(ref isNumberSelected, value, nameof(IsNumberSelected));
+            Validate(nameof(IsNumberSelected));
+        }
+    }
 
-    [ObservableProperty]
-    public bool isBoolSelected;
+    private bool isBoolSelected;
+    public bool IsBoolSelected
+    {
+        get => isBoolSelected;
+        set
+        {
+            SetProperty(ref isBoolSelected, value, nameof(IsBoolSelected));
+            Validate(nameof(IsBoolSelected));
+        }
+    }
 
-    [ObservableProperty]
-    public decimal maxValue;
+    private decimal maxValue;
+    public decimal MaxValue
+    {
+        get => maxValue;
+        set
+        {
+            SetProperty(ref maxValue, value, nameof(MaxValue));
+            Validate(nameof(MaxValue));
+        }
+    }
 
-    [ObservableProperty]
-    public decimal minValue;
+    private decimal minValue;
+    public decimal MinValue
+    {
+        get => minValue;
+        set
+        {
+            SetProperty(ref minValue, value, nameof(MinValue));
+            Validate(nameof(MinValue));
+        }
+    }
 
-    [ObservableProperty]
-    public string searchText; 
-    
-    [ObservableProperty]
-    public bool boolValue;
+    private string searchText; 
+    public string SearchText
+    {
+        get => searchText;
+        set
+        {
+            SetProperty(ref searchText, value, nameof(SearchText));
+            Validate(nameof(SearchText));
+        }
+    }
 
-    [ObservableProperty]
-    public DateTime startDate;
+    private bool boolValue;
+    public bool BoolValue
+    {
+        get => boolValue;
+        set
+        {
+            SetProperty(ref boolValue, value, nameof(BoolValue));
+            Validate(nameof(BoolValue));
+        }
+    }
 
-    [ObservableProperty]
-    public DateTime endDate;
+    private DateTime? startDate;
+    public DateTime? StartDate
+    {
+        get => startDate;
+        set
+        {
+            SetProperty(ref startDate, value, nameof(StartDate));
+            Validate(nameof(StartDate));
+        }
+    }
+
+    private DateTime? endDate;
+    public DateTime? EndDate
+    {
+        get => endDate;
+        set
+        {
+            SetProperty(ref endDate, value, nameof(EndDate));
+            Validate(nameof(EndDate));
+        }
+    }
 
     public ObservableCollection<FindCriteria> PropertiesCriterias { get; set; }
 
@@ -281,4 +366,49 @@ public partial class FindEmployeesViewModel : ObservableObject
     public bool isLoading;
 
     #endregion
+
+    public IEnumerable GetErrors(string propertyName)
+    {
+        if (_errors.TryGetValue(propertyName, out var errors))
+        {
+            return errors;
+        }
+        else
+        {
+            return Enumerable.Empty<string>();
+        }
+    }
+
+    private void Validate(string propertyName = null)
+    {
+        var context = new ValidationContext<FindEmployeesViewModel>(this);
+
+        var validationResult = _validator.Validate(context);
+
+        _errors.Clear();
+        totalErrors = 0;
+
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                totalErrors++;
+                if (_errors.ContainsKey(error.PropertyName))
+                {
+                    _errors[error.PropertyName].Add(error.ErrorMessage);
+                }
+                else
+                {
+                    _errors[error.PropertyName] = [error.ErrorMessage];
+                }
+            }
+        }
+
+        if (propertyName != null)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+        FindEmployeeCommand.NotifyCanExecuteChanged();
+    }
 }

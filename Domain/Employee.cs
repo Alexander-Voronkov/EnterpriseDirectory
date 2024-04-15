@@ -38,11 +38,6 @@ public class Employee
     public decimal? Salary { get; set; }
 
     /// <summary>
-    /// Валюта
-    /// </summary>
-    public string Currency { get; set; }
-
-    /// <summary>
     /// Посада
     /// </summary>
     public string Position { get; set; }

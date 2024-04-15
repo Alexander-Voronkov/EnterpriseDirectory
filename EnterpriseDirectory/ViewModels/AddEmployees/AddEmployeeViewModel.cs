@@ -192,13 +192,15 @@ public partial class AddEmployeeViewModel : ObservableObject, INotifyDataErrorIn
     #endregion
 
     #region Commands` execution conditions
+
     private bool CanSave()
     {
         return !HasErrors;
     }
+
     #endregion
 
-    public void Validate(string propertyName = null)
+    private void Validate(string propertyName = null)
     {
         var context = new ValidationContext<AddEmployeeViewModel>(this);
 
