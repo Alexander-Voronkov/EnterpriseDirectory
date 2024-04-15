@@ -22,30 +22,168 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-
-        <Label Content="Оберіть критерій пошуку:"></Label>
+    <Grid>        
+        <spinner:LoadingSpinner 
+            IsLoading="{Binding IsLoading}" 
+            Grid.Row="1"
+            Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+        </spinner:LoadingSpinner>
         
-        <ComboBox Grid.Row="1" ItemsSource="{Binding PropertiesCriterias}" SelectedItem="{Binding SelectedProperty}">
-        </ComboBox>
+        <Grid Visibility="{Binding IsLoading, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <DatePicker SelectedDate="{Binding StartDate}" Text="Початкова дата"/>
-        <DatePicker SelectedDate="{Binding EndDate}" Text="Кінцева дата"/>
-        <TextBox Text="{Binding MinValue}"/>
-        <TextBox Text="{Binding MaxValue}"/>
-        <TextBox Text="{Binding SearchText}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"></RowDefinition>
+                <RowDefinition Height="8*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <DataGrid ItemsSource="{Binding FoundValues}"/>
+            <Label Content="Оберіть критерій пошуку:" 
+                   HorizontalAlignment="Center" 
+                   FontSize="20"></Label>
 
-        <Button Command="{Binding FindEmployeesCommand}" Content="Знайти"></Button>
+            <ComboBox Grid.Row="0"
+                      Grid.Column="0"
+                      ItemsSource="{Binding PropertiesCriterias}" 
+                      SelectedItem="{Binding SelectedProperty}"
+                      DisplayMemberPath="DisplayName"
+                      HorizontalContentAlignment="Center"
+                      Margin="5">
+            </ComboBox>
+
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label 
+                    Content="Початкова дата"
+                    Grid.Row="0" Grid.Column="0"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Visibility="{Binding IsDateSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DatePicker
+                    SelectedDate="{Binding StartDate}"
+                    Visibility="{Binding IsDateSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Text="Початкова дата"
+                    Grid.Row="0"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    Grid.Column="1"/>
+
+                <Label 
+                    Content="Кінцева дата" 
+                    Grid.Row="1" Grid.Column="0"
+                    FontSize="15"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsDateSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <DatePicker 
+                    SelectedDate="{Binding EndDate}" 
+                    Visibility="{Binding IsDateSelected, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Text="Кінцева дата"
+                    Grid.Row="1"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    Grid.Column="1"/>
+
+                <Label 
+                    Content="Мінімальне значення" 
+                    Grid.Row="0" 
+                    FontSize="15"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsNumberSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox 
+                    Text="{Binding MinValue}"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsNumberSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <Label 
+                    Content="Максимальне значення" 
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    FontSize="15"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsNumberSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox 
+                    Text="{Binding MaxValue}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsNumberSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <Label 
+                    Content="Введіть значення" 
+                    Grid.Row="0" 
+                    FontSize="15"
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
+                    Margin="10px"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsTextSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBox 
+                    Text="{Binding SearchText}"
+                    Grid.Row="0"
+                    FontSize="15"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsTextSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                
+                <Label 
+                    Content="Оберіть значення" 
+                    Grid.Row="0" 
+                    FontSize="15"
+                    Grid.Column="0"
+                    Grid.RowSpan="2"
+                    Margin="10px"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsBoolSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                <CheckBox 
+                    IsChecked="{Binding BoolValue}"
+                    Grid.Row="0"
+                    FontSize="15"
+                    Grid.RowSpan="2"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Visibility="{Binding IsBoolSelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+            </Grid>
+
+
+            <DataGrid 
+                    ItemsSource="{Binding FoundValues}"
+                    Grid.Column="0" Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    AutoGenerateColumns="True"
+                    IsReadOnly="True"/>
+
+            <Button
+                    Command="{Binding FindEmployeeCommand}"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Content="Знайти"/>
+        </Grid>
     </Grid>
 </Window>

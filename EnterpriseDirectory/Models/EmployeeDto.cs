@@ -47,12 +47,6 @@ public class EmployeeDto
     public decimal? Salary { get; set; }
 
     /// <summary>
-    /// Валюта
-    /// </summary>
-    [FindCriteriaAttribute("Валюта зарплати")]
-    public string Currency { get; set; }
-
-    /// <summary>
     /// Посада
     /// </summary>
     [FindCriteriaAttribute("Посада")]
@@ -62,13 +56,12 @@ public class EmployeeDto
     /// Чи звільнений
     /// </summary>
     [ExportIgnore]
-    [FindCriteriaAttribute("Чи звільнений")]
     public bool IsFired => FiredOn is not null;
 
     /// <summary>
-    /// Сімейний статус
+    /// Статус
     /// </summary>
-    [FindCriteriaAttribute("Сімейний статус")]
+    [FindCriteriaAttribute("Статус")]
     public string Status { get; set; }
 
     /// <summary>

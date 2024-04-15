@@ -82,7 +82,7 @@ public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
             .RuleFor(x=>x.Currency, x => x.Finance.Currency().Code)
             .RuleFor(x=>x.Status, x => x.Random.Word());
 
-        var employees = faker.Generate(50);        
+        var employees = faker.Generate(500);        
 
         builder.HasData(employees);
     }

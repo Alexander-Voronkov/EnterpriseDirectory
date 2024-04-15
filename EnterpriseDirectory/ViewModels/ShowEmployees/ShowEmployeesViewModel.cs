@@ -49,6 +49,8 @@ public partial class ShowEmployeesViewModel : ObservableObject
 
         _employees = new();
 
+        Employees = new ReadOnlyObservableCollection<EmployeeDto>(_employees);
+
         _employees.CollectionChanged += (sender, ea) =>
         {
             DeleteAllEmployeesCommand.NotifyCanExecuteChanged();
@@ -101,6 +103,9 @@ public partial class ShowEmployeesViewModel : ObservableObject
     private async Task RefreshEmployees()
     {
         IsLoading = true;
+
+        // for better ux :)
+        await Task.Delay(100);
 
         _logger.LogInformation("Getting employees for UI...");
 
@@ -160,7 +165,6 @@ public partial class ShowEmployeesViewModel : ObservableObject
         {
             return;
         }
-
 
         IsLoading = true;
 
@@ -300,9 +304,7 @@ public partial class ShowEmployeesViewModel : ObservableObject
 
     private async Task Find()
     {
-        IsLoading = true;
-
-        IsLoading = false;
+        _findEmployeeView.ShowDialog();
     }
 
     private async Task Modify()
@@ -322,7 +324,7 @@ public partial class ShowEmployeesViewModel : ObservableObject
 
     private bool CanRenew()
     {
-        return SelectedItem is not null;
+        return SelectedItem is not null && SelectedItem.IsFired;
     }
 
     private bool CanModify()

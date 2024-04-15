@@ -142,17 +142,6 @@ public partial class ModifyEmployeeViewModel : ObservableObject, INotifyDataErro
         }
     }
 
-    private string currency;
-    public string Currency
-    {
-        get => currency;
-        set
-        {
-            SetProperty(ref currency, value);
-            Validate(nameof(Currency));
-        }
-    }
-
     private DateTime acceptanceDate;
     public DateTime AcceptanceDate
     {

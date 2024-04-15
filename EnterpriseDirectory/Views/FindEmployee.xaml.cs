@@ -1,4 +1,6 @@
-﻿using System;
+﻿using EnterpriseDirectory.ViewModels.FindEmployees;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,9 +22,13 @@ namespace EnterpriseDirectory.Views;
 /// </summary>
 public partial class FindEmployee : Window
 {
-    public FindEmployee()
+    public FindEmployee(
+        ILogger<FindEmployee> logger,
+        FindEmployeesViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
+        logger.LogInformation("Successfully initialized find employee view.");
     }
 
     protected override void OnClosing(CancelEventArgs e)

@@ -42,8 +42,6 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
                 <Grid.Resources>
@@ -94,6 +92,9 @@
                 <Label Grid.Column="0" Grid.Row="5">Email:</Label>
                 <TextBox Grid.Column="1" Grid.Row="5" x:Name="EmailInput" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
+                <Label Grid.Column="0" Grid.Row="5">Статус:</Label>
+                <TextBox Grid.Column="1" Grid.Row="5" x:Name="StatusInput" Text="{Binding Status, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
                 <Label Grid.Column="0" Grid.Row="6">Дата народження:</Label>
                 <DatePicker Grid.Column="1" Grid.Row="6" x:Name="BirthDateInput" SelectedDate="{Binding BirthDate, UpdateSourceTrigger=PropertyChanged}"></DatePicker>
 
@@ -102,14 +103,11 @@
 
                 <Label Grid.Column="0" Grid.Row="8">Зарплата:</Label>
                 <TextBox Grid.Column="1" Grid.Row="8" x:Name="SalaryInput" Text="{Binding Salary, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-
-                <Label Grid.Column="0" Grid.Row="9">Валюта:</Label>
-                <TextBox Grid.Column="1" Grid.Row="9" x:Name="CurrencyInput" Text="{Binding Currency, UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </Grid>
         </GroupBox>
 
         <Button 
-            Grid.Row="1" 
+            Grid.Row="9" 
             HorizontalAlignment="Right" 
             VerticalAlignment="Center" 
             Width="100" 

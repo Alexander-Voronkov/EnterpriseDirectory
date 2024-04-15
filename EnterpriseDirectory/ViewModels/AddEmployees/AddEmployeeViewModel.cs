@@ -76,6 +76,17 @@ public partial class AddEmployeeViewModel : ObservableObject, INotifyDataErrorIn
         }
     }
 
+    private string status;
+    public string Status
+    {
+        get => status;
+        set
+        {
+            SetProperty(ref status, value);
+            Validate(nameof(Status));
+        }
+    }
+
     private string patronymic;
     public string Patronymic
     {
@@ -139,17 +150,6 @@ public partial class AddEmployeeViewModel : ObservableObject, INotifyDataErrorIn
         {
             SetProperty(ref salary, value);
             Validate(nameof(Salary));
-        }
-    }
-
-    private string currency;
-    public string Currency
-    {
-        get => currency;
-        set
-        {
-            SetProperty(ref currency, value);
-            Validate(nameof(Currency));
         }
     }
 

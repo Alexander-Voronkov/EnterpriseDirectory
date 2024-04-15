@@ -54,10 +54,5 @@ public class ModifyEmployeeValidator : AbstractValidator<ModifyEmployeeViewModel
             .NotEmpty()
             .MaximumLength(100)
             .WithMessage("Введіть посаду");
-
-        RuleFor(x => x.Currency)
-            .NotEmpty()
-            .MaximumLength(10)
-            .WithMessage("Введіть валюту, у якій виплачується зарплата");
     }
 }
